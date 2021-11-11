@@ -77,16 +77,24 @@ class LoginController extends Controller
         return redirect()->route('home');
     }
     protected function _registerOrLoginUser($data){
-        $user = User::where('email','=',$data->email)->first();
-        if(!$user)
-        {
-            $user = new User();
-            $user->name = $data->name;
-            $user->email = $data->email;
-            $user->provider_id = $data->id;
-            $user->avatar=$data->avatar;
-            $user->save();
+        $user = User::where('email',$data->email)->first();
+        if( $user ) {
+            // update the avatar and provider that might have changed
+            $user->update([
+                'avatar' => $data->avatar,
+                'provider_id' => $data->id,
+                'access_token' => $data->token
+            ]);
+        } else {
+            // create a new user
+            $user = User::create([
+                'name' => $data->getName(),
+                'email' => $data->getEmail(),
+                'avatar' => $data->getAvatar(),
+                'provider_id' => $data->getId(),
+                'access_token' => $data->token,
+            ]);
         }
-        Auth::login($user);
+        Auth::login($user,true);
     }
 }
