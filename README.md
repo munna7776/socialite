@@ -61,3 +61,45 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Command
+<p>composer global require laravel/installer</p>
+<p>laravel new socialite</p>
+<p>composer require laravel/ui</p>
+<p>php artisan ui vue --auth (Generate login / registration scaffolding...)</p>
+<p>php artisan serve</p>
+
+# laravel Socialite
+```bash
+composer require laravel/socialite
+
+update .env files :
+GOOGLE_CLIENT_ID="google client id"
+GOOGLE_CLIENT_SECRET="google client secret"
+
+GITHUB_CLIENT_ID="github client id"
+GITHUB_CLIENT_SECRET="github client secret"
+
+FACEBOOK_CLIENT_ID="facebook client id"
+FACEBOOK_CLIENT_SECRET="facebook client secret"
+
+Change in the config/services.php :
+'github' => [
+    'client_id' => env('GITHUB_CLIENT_ID'),
+    'client_secret' => env('GITHUB_CLIENT_SECRET'),
+    'redirect' => 'http://localhost:8000/login/github/callback',
+],
+
+'google' => [
+    'client_id' => env('GOOGLE_CLIENT_ID'),
+    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+    'redirect' => 'http://localhost:8000/login/google/callback',
+],
+
+'facebook' => [
+    'client_id' => env('FACEBOOK_CLIENT_ID'),
+    'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+    'redirect' => 'http://localhost:8000/login/facebook/callback',
+],
+
+```
