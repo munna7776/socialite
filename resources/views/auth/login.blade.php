@@ -8,14 +8,17 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
+                    @if(session('error'))
+                    <div class="alert alert-danger">{{session('error')}}</div>
+                    @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
                         <div class="form-group row mt-2">
                             <div class="col-md-6 offset-md-4">
-                                <a href="{{route('login.google')}}" class="btn btn-danger text-center w-100 fw-bold ">Login with Google</a>
-                                <a href="{{route('login.facebook')}}" class="btn text-center w-100 fw-bold mt-2" style="background-color: blue;">Login with Facebook</a>
-                                <a href="{{route('login.github')}}" class="btn btn-dark text-center w-100 fw-bold mt-2">Login with Github</a>
+                                <a href="{{url('login/google')}}" class="btn btn-danger text-center w-100 fw-bold ">Login with Google</a>
+                                <a href="{{url('login/facebook')}}" class="btn text-center w-100 fw-bold mt-2" style="background-color: blue;">Login with Facebook</a>
+                                <a href="{{url('login/github')}}" class="btn btn-dark text-center w-100 fw-bold mt-2">Login with Github</a>
 
                             </div>
                         </div>

@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,20 +23,8 @@ Route::get('/', function () {
 Auth::routes();
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-//google login
-Route::get('/login/google',[LoginController::class,'redirectToGoogle'])->name('login.google');
-Route::get('/login/google/callback',[LoginController::class,'handleGoogleCallback']);
-
-//github login
-Route::get('/login/github',[LoginController::class,'redirectToGithub'])->name('login.github');
-Route::get('/login/github/callback',[LoginController::class,'handleGithubCallback']);
-
-//facebook Login
-Route::get('/login/facebook',[LoginController::class,'redirectToFacebook'])->name('login.facebook');
-Route::get('/login/facebook/callback',[LoginController::class,'handleFacebookCallback']);
-
-//twitter Login
-// Route::get('/login/twitter',[LoginController::class,'redirectToTwitter'])->name('login.twitter');
-// Route::get('/login/twitter/callback',[LoginController::class,'handleTwitterCallback']);
+//Social login Route
+Route::get('/login/{driver}',[LoginController::class,'redirectToProvider']);
+Route::get('/login/{driver}/callback',[LoginController::class,'handleProviderCallback']);

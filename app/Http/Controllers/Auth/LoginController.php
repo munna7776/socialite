@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -40,42 +41,37 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    //google login
-    public function redirectToGoogle(){
-        return Socialite::driver('google')->redirect();
-    }
-    //google callback
-    public function handleGoogleCallback()
-    {
-        $user = Socialite::driver('google')->user();
-        $this->_registerOrLoginUser($user);
-        return redirect()->route('home');
+
+    public function redirectToProvider($driver){
+        try {
+
+            return Socialite::driver($driver)->redirect();
+
+        } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
+
+            Log::channel('errorlog')->error($e->getMessage());
+            return redirect()->route('login')->with('error','Try again after refreshing the page');
+
+        }
     }
 
-    //github login
-    public function redirectToGithub(){
-        return Socialite::driver('github')->redirect();
-    }
-    //github callback
-    public function handleGithubCallback()
+    public function handleProviderCallback($driver)
     {
-        $user = Socialite::driver('github')->user();
-        $this->_registerOrLoginUser($user);
-        return redirect()->route('home');
+        try {
+
+            $user = Socialite::driver($driver)->user();
+            $this->_registerOrLoginUser($user);
+            return redirect()->intended('home');
+
+        } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
+
+            Log::channel('errorlog')->error($e->getMessage());
+            return redirect()->route('login')->with('error','Try again after refreshing the page');
+
+        }
+
     }
 
-
-    //facebook login
-    public function redirectToFacebook(){
-        return Socialite::driver('facebook')->redirect();
-    }
-    //facebook callback
-    public function handleFacebookCallback()
-    {
-        $user = Socialite::driver('facebook')->user();
-        $this->_registerOrLoginUser($user);
-        return redirect()->route('home');
-    }
     protected function _registerOrLoginUser($data){
         $user = User::where('email',$data->email)->first();
         if( $user ) {
